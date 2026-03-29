@@ -38,8 +38,23 @@ final class EventDispatcher implements EventPublisherInterface
             $this->listeners['*']              ?? [],
         );
 
+        // Listener fault isolation: all listeners are called even when one or
+        // more throw.  The first exception encountered is re-thrown after every
+        // listener has had a chance to run.  This prevents a failing module
+        // listener from silently blocking other modules that subscribe to the
+        // same event (which would cause undetected cross-module data loss).
+        $firstException = null;
+
         foreach ($targets as $listener) {
-            $listener($event);
+            try {
+                $listener($event);
+            } catch (\Throwable $e) {
+                $firstException ??= $e;
+            }
+        }
+
+        if ($firstException !== null) {
+            throw $firstException;
         }
     }
 
