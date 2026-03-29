@@ -93,6 +93,16 @@ final class Kernel
             $module->boot($this->container);
         }
 
+        // Phase 5: register cross-module event subscriptions.
+        // EventSubscriptions::register() must be called here so that all
+        // module service providers (and their EventPublisherInterface binding)
+        // are already resolved before subscriptions are wired.
+        // Example boot-site wiring:
+        //   $subscriptions = new \App\Bootstrap\EventSubscriptions(
+        //       $this->container->get(\App\Contracts\Services\EventPublisherInterface::class)
+        //   );
+        //   $subscriptions->register();
+
         $this->booted = true;
     }
 

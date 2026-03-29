@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "leaderboard.rebuilt",
+  "description": "INTEGRATION-002 — Emitted by the Integration layer when the leaderboard read model is fully rebuilt. Consumers (cache layer) use this to invalidate cached leaderboard data.",
+  "type": "object",
+  "properties": {
+    "event_id":       { "type": "string", "format": "uuid" },
+    "event_name":     { "type": "string", "const": "leaderboard.rebuilt" },
+    "occurred_at":    { "type": "string", "format": "date-time" },
+    "actor_id":       { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id":   { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "rebuilt_at":    { "type": "string", "format": "date-time", "description": "ISO-8601 timestamp when the rebuild completed" },
+        "entry_count":   { "type": "integer", "minimum": 0, "description": "Number of ranked entries in the rebuilt leaderboard" },
+        "triggered_by":  { "type": "string", "description": "UUID of the user who triggered the rebuild, or 'scheduler' for automated runs" }
+      },
+      "required": ["rebuilt_at", "entry_count", "triggered_by"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}
