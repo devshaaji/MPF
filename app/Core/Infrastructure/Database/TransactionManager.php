@@ -67,6 +67,20 @@ final class TransactionManager implements DatabaseInterface
         $this->factory->getConnection()->rollBack();
     }
 
+    /**
+     * Reset the internal transaction depth counter to zero.
+     *
+     * Call this after a connection-level failure (e.g., after
+     * ConnectionFactory::reset()) to re-synchronise the depth state with the
+     * actual database connection, which will have no active transaction after
+     * a reconnect.  Without this, subsequent beginTransaction() or rollback()
+     * calls would operate on a stale depth value.
+     */
+    public function resetTransactionState(): void
+    {
+        $this->depth = 0;
+    }
+
     // ------------------------------------------------------------------
     // Statement execution
     // ------------------------------------------------------------------

@@ -52,6 +52,10 @@ final class QueueDispatcher implements QueueDispatcherInterface
      * the process. For a long-running worker handling millions of jobs, use a
      * broker-backed adapter (Redis SET with TTL, SQS MessageDeduplicationId,
      * etc.) which provides a bounded, TTL-expiring deduplication window.
+     *
+     * When $maxSeenSize > 0 this implementation evicts the oldest half of the
+     * seen set once the threshold is reached, bounding memory growth for
+     * long-running in-process workers.
      * @var array<string, true>
      */
     private array $seen = [];
