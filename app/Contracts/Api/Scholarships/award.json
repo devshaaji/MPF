@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "ScholarshipAward",
+  "description": "Award a scholarship application. Application must be in 'submitted' state. State transition: submitted → awarded. Forbidden: awarding from draft or rejected state.",
+  "endpoint": "POST /api/v1/scholarships/applications/{id}/award",
+  "preconditions": ["application.status === 'submitted'"],
+  "request": {
+    "type": "object",
+    "properties": {
+      "awarder_id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the admin or scholarship-manager performing the award"
+      },
+      "application_id": { "type": "string", "format": "uuid" },
+      "award_amount": { "type": "number", "minimum": 0 },
+      "award_notes": { "type": "string" }
+    },
+    "required": ["awarder_id", "application_id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "application_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "awarded" },
+      "awarded_at": { "type": "string", "format": "date-time" },
+      "awarded_by": { "type": "string", "format": "uuid" }
+    },
+    "required": ["application_id", "status", "awarded_at", "awarded_by"],
+    "additionalProperties": false
+  }
+}

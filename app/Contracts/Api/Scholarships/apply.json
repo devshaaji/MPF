@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "ScholarshipApply",
+  "description": "Apply for a scholarship. Requires a submitted form. State transition: (new) → submitted.",
+  "endpoint": "POST /api/v1/scholarships/{id}/apply",
+  "request": {
+    "type": "object",
+    "properties": {
+      "applicant_id": { "type": "string", "format": "uuid" },
+      "scholarship_id": { "type": "string", "format": "uuid" },
+      "form_submission_id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Reference to forms module submission — not a FK join"
+      },
+      "cover_letter": { "type": "string" }
+    },
+    "required": ["applicant_id", "scholarship_id", "form_submission_id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "application_id": { "type": "string", "format": "uuid" },
+      "scholarship_id": { "type": "string", "format": "uuid" },
+      "applicant_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "submitted" },
+      "applied_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["application_id", "scholarship_id", "applicant_id", "status", "applied_at"],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "scholarships.application_submitted",
+  "description": "Emitted when a scholarship application reaches the 'submitted' state",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "scholarships.application_submitted" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "application_id": { "type": "string", "format": "uuid" },
+        "scholarship_id": { "type": "string", "format": "uuid" },
+        "applicant_id": { "type": "string", "format": "uuid" },
+        "form_submission_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Reference to forms module submission — not a FK join"
+        },
+        "submitted_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["application_id", "scholarship_id", "applicant_id", "form_submission_id", "submitted_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

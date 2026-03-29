@@ -102,6 +102,19 @@ declare(strict_types=1);
 // POST   /api/v1/notifications/{id}/read     → Notifications\MarkReadHandler
 
 // ---------------------------------------------------------------------------
+// SCHOLARSHIPS MODULE (SCHOLARSHIPS-001)
+// Depends on: FORMS-001, USERS-001, INFRA-DB-001, INFRA-EVENT-001
+// Consumes:   forms.submission_received, users.user_deactivated
+// Emits:      scholarships.application_submitted, scholarships.application_awarded
+// ---------------------------------------------------------------------------
+// POST   /api/v1/scholarships                          → Scholarships\CreateScholarshipHandler
+// GET    /api/v1/scholarships                          → Scholarships\ListScholarshipsHandler
+// GET    /api/v1/scholarships/{id}                     → Scholarships\GetScholarshipHandler
+// POST   /api/v1/scholarships/{id}/apply               → Scholarships\ApplyScholarshipHandler
+// GET    /api/v1/scholarships/applications/{id}        → Scholarships\GetApplicationHandler
+// POST   /api/v1/scholarships/applications/{id}/award  → Scholarships\AwardScholarshipHandler
+
+// ---------------------------------------------------------------------------
 // ADMIN MODULE (ADMIN-001)
 // Depends on: USERS-001, AUTH-001
 // Required roles: admin | moderator (per route)

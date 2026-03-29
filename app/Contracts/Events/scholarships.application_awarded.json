@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "scholarships.application_awarded",
+  "description": "Emitted when a scholarship application is awarded",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "scholarships.application_awarded" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "application_id": { "type": "string", "format": "uuid" },
+        "scholarship_id": { "type": "string", "format": "uuid" },
+        "applicant_id": { "type": "string", "format": "uuid" },
+        "awarded_by": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID of the admin or scholarship-manager who performed the award"
+        },
+        "award_amount": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Monetary award amount; nullable if not applicable"
+        },
+        "awarded_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["application_id", "scholarship_id", "applicant_id", "awarded_by", "award_amount", "awarded_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}
