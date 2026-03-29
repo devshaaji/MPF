@@ -23,10 +23,12 @@ use App\Core\Infrastructure\DI\Container;
  */
 final class WebRuntime
 {
-    private readonly string      $correlationId;
-    private readonly ContainerInterface $container;
-    private readonly ConfigInterface    $config;
-    private readonly Kernel      $kernel;
+    private string             $correlationId;
+    private ContainerInterface $container;
+    private ConfigInterface    $config;
+    private Kernel             $kernel;
+
+    private bool $booted = false;
 
     /**
      * @param list<ModuleInterface> $modules     Application modules to register.
@@ -51,17 +53,15 @@ final class WebRuntime
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
 
-        // Expose via readonly properties.
-        // PHP 8.1 does not support late readonly assignment from inside methods
-        // after __construct, so we use a separate init pattern via a private setter.
-        $this->initState($container, $config);
+        $this->container = $container;
+        $this->config    = $config;
 
         // Build and boot kernel.
         $kernel = new Kernel($container, $config);
         $kernel->registerModules($this->modules);
         $kernel->boot();
 
-        $this->initKernel($kernel);
+        $this->kernel = $kernel;
     }
 
     // ------------------------------------------------------------------
@@ -99,20 +99,5 @@ final class WebRuntime
             date('Ymd-His'),
             bin2hex(random_bytes(8)),
         );
-    }
-
-    /** Bypass readonly constraint by assigning once during boot. */
-    private function initState(ContainerInterface $container, ConfigInterface $config): void
-    {
-        // @phpstan-ignore-next-line
-        $this->container = $container;
-        // @phpstan-ignore-next-line
-        $this->config    = $config;
-    }
-
-    private function initKernel(Kernel $kernel): void
-    {
-        // @phpstan-ignore-next-line
-        $this->kernel = $kernel;
     }
 }
