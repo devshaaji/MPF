@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "ads.click_recorded",
+  "description": "Emitted when a viewer clicks an ad, correlated via impression_token",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "ads.click_recorded" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "ad_id": { "type": "string", "format": "uuid" },
+        "campaign_id": { "type": "string", "format": "uuid" },
+        "viewer_id": { "type": ["string", "null"], "format": "uuid" },
+        "impression_token": { "type": "string" },
+        "clicked_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ad_id", "campaign_id", "viewer_id", "impression_token", "clicked_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

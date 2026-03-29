@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "CreateForm",
+  "description": "Contract for POST /api/v1/forms — create a new form definition",
+  "request": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "description": { "type": "string", "maxLength": 2000 },
+      "fields": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "properties": {
+            "field_id": { "type": "string", "minLength": 1, "description": "Client-assigned stable identifier for this field within the form" },
+            "type": { "type": "string", "enum": ["text", "textarea", "select", "checkbox", "date"] },
+            "label": { "type": "string", "minLength": 1 },
+            "required": { "type": "boolean" },
+            "options": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Required when type is select or checkbox"
+            }
+          },
+          "required": ["field_id", "type", "label", "required"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": ["title", "fields"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "form_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["form_id", "title", "created_at"],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "SubmitForm",
+  "description": "Contract for POST /api/v1/forms/{id}/submissions — submit answers for a form",
+  "request": {
+    "type": "object",
+    "properties": {
+      "submitter_id": { "type": "string", "format": "uuid" },
+      "answers": {
+        "type": "object",
+        "description": "Map of field_id to answer value. Value type depends on field type.",
+        "additionalProperties": true
+      }
+    },
+    "required": ["submitter_id", "answers"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "submission_id": { "type": "string", "format": "uuid" },
+      "form_id": { "type": "string", "format": "uuid" },
+      "submitted_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["submission_id", "form_id", "submitted_at"],
+    "additionalProperties": false
+  }
+}

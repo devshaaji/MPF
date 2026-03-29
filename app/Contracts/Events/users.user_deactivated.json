@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "users.user_deactivated",
+  "description": "MCL-02 — Emitted when a user account is deactivated. Consumers (Auth, Forum, Projects, News, DigitalID, Notifications) must react accordingly.",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "users.user_deactivated" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "format": "uuid" },
+        "reason": { "type": "string" },
+        "deactivated_by": { "type": "string", "format": "uuid", "description": "actor_id of the admin or system that triggered deactivation. Use a reserved system UUID (00000000-0000-0000-0000-000000000001) for automated/system-triggered deactivations." }
+      },
+      "required": ["user_id", "reason", "deactivated_by"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

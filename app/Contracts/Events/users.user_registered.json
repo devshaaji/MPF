@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "users.user_registered",
+  "description": "Emitted when a new user account is created on the platform",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "users.user_registered" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "format": "uuid" },
+        "email": { "type": "string", "format": "email" },
+        "display_name": { "type": "string" },
+        "provider": { "type": "string" },
+        "provider_subject": { "type": "string" }
+      },
+      "required": ["user_id", "email", "display_name", "provider", "provider_subject"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

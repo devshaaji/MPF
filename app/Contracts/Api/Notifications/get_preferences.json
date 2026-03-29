@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "GetNotificationPreferences",
+  "description": "Contract for GET /api/v1/notifications/preferences — retrieve a user's notification preferences",
+  "request": {
+    "type": "object",
+    "description": "No request body. The authenticated user_id is resolved from the JWT.",
+    "properties": {},
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "user_id": { "type": "string", "format": "uuid" },
+      "channels": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "boolean" },
+          "push": { "type": "boolean" },
+          "in_app": { "type": "boolean" }
+        },
+        "required": ["email", "push", "in_app"],
+        "additionalProperties": false
+      },
+      "topics": {
+        "type": "object",
+        "properties": {
+          "news": { "type": "boolean" },
+          "forum": { "type": "boolean" },
+          "scholarship": { "type": "boolean" }
+        },
+        "required": ["news", "forum", "scholarship"],
+        "additionalProperties": false
+      }
+    },
+    "required": ["user_id", "channels", "topics"],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "notifications.message_queued",
+  "description": "Emitted when a notification message is enqueued for delivery",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "notifications.message_queued" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "notification_id": { "type": "string", "format": "uuid" },
+        "user_id": { "type": "string", "format": "uuid" },
+        "template": { "type": "string", "description": "Notification template identifier" },
+        "idempotency_key": { "type": "string", "description": "Required — ensures exactly-once delivery across retries" },
+        "queued_at": { "type": "string", "format": "date-time" },
+        "channel": { "type": "string", "enum": ["email", "push", "in_app"] }
+      },
+      "required": ["notification_id", "user_id", "template", "idempotency_key", "queued_at", "channel"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

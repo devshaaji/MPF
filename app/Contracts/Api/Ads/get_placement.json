@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "GetPlacement",
+  "description": "Contract for GET /api/v1/ads/placement — fetch an ad for display in a named placement zone",
+  "request": {
+    "type": "object",
+    "description": "Supplied as query string parameters",
+    "properties": {
+      "viewer_id": { "type": "string", "format": "uuid", "description": "Optional — omit for anonymous viewers" },
+      "placement_zone": { "type": "string", "minLength": 1 }
+    },
+    "required": ["placement_zone"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "ad_id": { "type": "string", "format": "uuid" },
+      "campaign_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string" },
+      "image_url": { "type": "string", "format": "uri" },
+      "target_url": { "type": "string", "format": "uri" },
+      "impression_token": { "type": "string", "description": "Opaque token used to correlate impression and click events" }
+    },
+    "required": ["ad_id", "campaign_id", "title", "image_url", "target_url", "impression_token"],
+    "additionalProperties": false
+  }
+}
