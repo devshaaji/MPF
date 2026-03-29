@@ -8,8 +8,10 @@ use App\Contracts\Services\ConfigInterface;
 use App\Contracts\Services\ContainerInterface;
 use App\Contracts\Services\ModuleInterface;
 use App\Core\Application\Kernel;
+use App\Contracts\Services\LoggerInterface;
 use App\Core\Infrastructure\Config\ConfigLoader;
 use App\Core\Infrastructure\DI\Container;
+use App\Core\Infrastructure\Logging\LoggerFactory;
 
 /**
  * WorkerRuntime — bootstraps the platform for async queue/worker processes.
@@ -56,6 +58,15 @@ final class WorkerRuntime
 
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
+
+        // TODO INFRA-LOG-001: wire LoggerInterface singleton for worker processes.
+        // $loggerFactory = new LoggerFactory(defaultChannel: 'queue', minLevel: $config->get('log.level') ?? 'debug');
+        // $container->singleton(LoggerInterface::class, fn () => $loggerFactory->makeDefault());
+        // Workers should then resolve:
+        //   $container->get(LoggerInterface::class)
+        //       ->withCorrelationId($this->correlationId)
+        //       ->withActorId('worker')
+        //       ->info('Job consumed', ['job_id' => $jobId]);
 
         $this->container = $container;
         $this->config    = $config;

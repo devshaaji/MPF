@@ -29,18 +29,20 @@ return [
     ],
 
     'db' => [
-        'driver'   => 'mysql',
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'name'     => 'mpf',
-        'charset'  => 'utf8mb4',
-        'username' => '',
-        'password' => '',
+        'driver'    => 'mysql',
+        'host'      => '127.0.0.1',
+        'port'      => 3306,
+        'name'      => 'mpf',
+        'charset'   => 'utf8mb4',
+        'user'      => '',      // primary key consumed by ConnectionFactory
+        'username'  => '',      // legacy alias — prefer db.user
+        'password'  => '',
     ],
 
     'cache' => [
-        'driver' => 'array',
-        'ttl'    => 3600,
+        'driver'      => 'array',
+        'ttl'         => 3600,
+        'ttl_default' => 3600,  // consumed by CacheStore (INFRA-CACHE-001)
     ],
 
     'queue' => [

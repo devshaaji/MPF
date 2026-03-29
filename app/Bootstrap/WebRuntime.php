@@ -8,8 +8,10 @@ use App\Contracts\Services\ConfigInterface;
 use App\Contracts\Services\ContainerInterface;
 use App\Contracts\Services\ModuleInterface;
 use App\Core\Application\Kernel;
+use App\Contracts\Services\LoggerInterface;
 use App\Core\Infrastructure\Config\ConfigLoader;
 use App\Core\Infrastructure\DI\Container;
+use App\Core\Infrastructure\Logging\LoggerFactory;
 
 /**
  * WebRuntime — bootstraps the platform for synchronous HTTP request handling.
@@ -43,6 +45,10 @@ final class WebRuntime
 
     public function boot(): void
     {
+        if ($this->booted) {
+            return;
+        }
+
         $this->correlationId = $this->generateCorrelationId();
 
         // Wire infrastructure.
@@ -53,6 +59,15 @@ final class WebRuntime
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
 
+        // TODO INFRA-LOG-001: wire LoggerInterface singleton with correlation ID context.
+        // $loggerFactory = new LoggerFactory(defaultChannel: 'app', minLevel: $config->get('log.level') ?? 'debug');
+        // $container->singleton(LoggerInterface::class, fn () => $loggerFactory->makeDefault());
+        // After boot, callers should use:
+        //   $container->get(LoggerInterface::class)
+        //       ->withCorrelationId($this->correlationId)
+        //       ->withActorId($actorId)
+        //       ->info('message', [...]);
+
         $this->container = $container;
         $this->config    = $config;
 
@@ -62,6 +77,7 @@ final class WebRuntime
         $kernel->boot();
 
         $this->kernel = $kernel;
+        $this->booted = true;
     }
 
     // ------------------------------------------------------------------

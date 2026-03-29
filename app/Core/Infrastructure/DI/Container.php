@@ -17,6 +17,44 @@ use App\Contracts\Services\ContainerInterface;
  *
  * Domain services must never call Container::get() directly (service
  * location anti-pattern); injection must be constructor-based only.
+ *
+ * --------------------------------------------------------------------------
+ * INFRA binding registrations (wire in bootstrap or a ServiceProvider):
+ * --------------------------------------------------------------------------
+ * // INFRA-DB-001
+ * $container->singleton(
+ *     \App\Contracts\Services\DatabaseInterface::class,
+ *     fn ($c) => new \App\Core\Infrastructure\Database\TransactionManager(
+ *         new \App\Core\Infrastructure\Database\ConnectionFactory($c->get(\App\Contracts\Services\ConfigInterface::class))
+ *     ),
+ * );
+ *
+ * // INFRA-LOG-001
+ * $container->singleton(
+ *     \App\Contracts\Services\LoggerInterface::class,
+ *     fn ($c) => (new \App\Core\Infrastructure\Logging\LoggerFactory())->makeDefault(),
+ * );
+ *
+ * // INFRA-EVENT-001
+ * $container->singleton(
+ *     \App\Contracts\Services\EventPublisherInterface::class,
+ *     fn () => new \App\Core\Infrastructure\Event\EventDispatcher(),
+ * );
+ *
+ * // INFRA-CACHE-001
+ * $container->singleton(
+ *     \App\Contracts\Services\CacheStoreInterface::class,
+ *     fn ($c) => new \App\Core\Infrastructure\Cache\CacheStore(
+ *         (int) ($c->get(\App\Contracts\Services\ConfigInterface::class)->get('cache.ttl_default') ?? 3600)
+ *     ),
+ * );
+ *
+ * // INFRA-QUEUE-001
+ * $container->singleton(
+ *     \App\Contracts\Services\QueueDispatcherInterface::class,
+ *     fn () => new \App\Core\Infrastructure\Queue\QueueDispatcher(),
+ * );
+ * --------------------------------------------------------------------------
  */
 final class Container implements ContainerInterface
 {

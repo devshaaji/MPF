@@ -24,7 +24,8 @@ return [
     'db' => [
         'host'     => '',   // Required: APP__DB__HOST
         'name'     => 'mpf',
-        'username' => '',   // Required: APP__DB__USERNAME
+        'user'     => '',   // Required: APP__DB__USER (primary key for ConnectionFactory)
+        'username' => '',   // Legacy alias — kept for backwards compatibility
         'password' => '',   // Required: APP__DB__PASSWORD
     ],
 
