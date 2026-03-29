@@ -6,10 +6,12 @@ namespace App\Bootstrap;
 
 use App\Contracts\Services\ConfigInterface;
 use App\Contracts\Services\ContainerInterface;
+use App\Contracts\Services\LoggerInterface;
 use App\Contracts\Services\ModuleInterface;
 use App\Core\Application\Kernel;
 use App\Core\Infrastructure\Config\ConfigLoader;
 use App\Core\Infrastructure\DI\Container;
+use App\Core\Infrastructure\Logging\LoggerFactory;
 
 /**
  * SchedulerRuntime — bootstraps the platform for CLI scheduled task execution.
@@ -57,6 +59,17 @@ final class SchedulerRuntime
 
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
+
+        // Wire structured logger singleton for scheduled task processes (INFRA-LOG-001).
+        $loggerFactory = new LoggerFactory(
+            defaultChannel: 'app',
+            minLevel: (string) ($config->get('log.level') ?? 'debug'),
+        );
+        $correlationId = $this->correlationId;
+        $container->singleton(
+            LoggerInterface::class,
+            static fn () => $loggerFactory->makeDefault()->withCorrelationId($correlationId),
+        );
 
         $this->container = $container;
         $this->config    = $config;

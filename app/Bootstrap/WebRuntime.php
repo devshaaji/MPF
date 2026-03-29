@@ -59,14 +59,19 @@ final class WebRuntime
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
 
-        // TODO INFRA-LOG-001: wire LoggerInterface singleton with correlation ID context.
-        // $loggerFactory = new LoggerFactory(defaultChannel: 'app', minLevel: $config->get('log.level') ?? 'debug');
-        // $container->singleton(LoggerInterface::class, fn () => $loggerFactory->makeDefault());
-        // After boot, callers should use:
-        //   $container->get(LoggerInterface::class)
-        //       ->withCorrelationId($this->correlationId)
-        //       ->withActorId($actorId)
-        //       ->info('message', [...]);
+        // Wire structured logger singleton (INFRA-LOG-001).
+        // The logger is stamped with the request correlation ID and writes
+        // JSON envelopes to STDERR by default.  Swap the writer callable in
+        // a service provider for file/Monolog transports in production.
+        $loggerFactory = new LoggerFactory(
+            defaultChannel: 'app',
+            minLevel: (string) ($config->get('log.level') ?? 'debug'),
+        );
+        $correlationId = $this->correlationId;
+        $container->singleton(
+            LoggerInterface::class,
+            static fn () => $loggerFactory->makeDefault()->withCorrelationId($correlationId),
+        );
 
         $this->container = $container;
         $this->config    = $config;
