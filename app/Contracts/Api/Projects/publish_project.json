@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "PublishProject",
+  "description": "Contract for POST /api/v1/projects/{id}/publish — transition a project from draft to published",
+  "request": {
+    "type": "object",
+    "properties": {
+      "publisher_id": { "type": "string", "format": "uuid" }
+    },
+    "required": ["publisher_id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "project_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "published" },
+      "published_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["project_id", "status", "published_at"],
+    "additionalProperties": false
+  }
+}

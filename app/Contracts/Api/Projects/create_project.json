@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "CreateProject",
+  "description": "Contract for POST /api/v1/projects — create a new project in draft status",
+  "request": {
+    "type": "object",
+    "properties": {
+      "owner_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+      "description": { "type": "string", "minLength": 1 },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string", "maxLength": 50 },
+        "maxItems": 10
+      },
+      "repository_url": { "type": "string", "format": "uri" }
+    },
+    "required": ["owner_id", "title", "description"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "project_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "draft" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["project_id", "status", "created_at"],
+    "additionalProperties": false
+  }
+}

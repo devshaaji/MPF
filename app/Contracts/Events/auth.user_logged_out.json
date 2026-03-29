@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "auth.user_logged_out",
+  "description": "Emitted when a user explicitly logs out, invalidating their session",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "auth.user_logged_out" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string", "format": "uuid" },
+        "session_id": { "type": "string", "format": "uuid" }
+      },
+      "required": ["user_id", "session_id"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

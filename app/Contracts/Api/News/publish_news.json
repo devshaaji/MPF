@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "PublishNews",
+  "description": "Contract for POST /api/v1/news/{id}/publish — transition a news article from draft to published",
+  "request": {
+    "type": "object",
+    "properties": {
+      "publisher_id": { "type": "string", "format": "uuid" }
+    },
+    "required": ["publisher_id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "news_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "published" },
+      "published_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["news_id", "status", "published_at"],
+    "additionalProperties": false
+  }
+}

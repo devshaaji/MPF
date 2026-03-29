@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "AddReply",
+  "description": "Contract for POST /api/v1/forum/topics/{id}/replies — add a reply to a forum topic",
+  "request": {
+    "type": "object",
+    "properties": {
+      "author_id": { "type": "string", "format": "uuid" },
+      "body": { "type": "string", "minLength": 1 }
+    },
+    "required": ["author_id", "body"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "reply_id": { "type": "string", "format": "uuid" },
+      "topic_id": { "type": "string", "format": "uuid" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["reply_id", "topic_id", "created_at"],
+    "additionalProperties": false
+  }
+}

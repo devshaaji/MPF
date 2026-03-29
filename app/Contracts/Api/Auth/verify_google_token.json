@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "VerifyGoogleToken",
+  "description": "Contract for POST /api/v1/auth/google/verify — verifies a Google ID token and issues a session token",
+  "request": {
+    "type": "object",
+    "properties": {
+      "token": {
+        "type": "string",
+        "description": "Google ID token obtained from the Google Sign-In flow"
+      },
+      "correlation_id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Client-supplied correlation identifier for tracing"
+      }
+    },
+    "required": ["token", "correlation_id"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "user_id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The platform user identifier"
+      },
+      "session_token": {
+        "type": "string",
+        "description": "Opaque session / JWT token for subsequent authenticated requests"
+      },
+      "expires_at": {
+        "type": "string",
+        "format": "date-time",
+        "description": "ISO-8601 UTC datetime when the session token expires"
+      }
+    },
+    "required": ["user_id", "session_token", "expires_at"],
+    "additionalProperties": false
+  }
+}

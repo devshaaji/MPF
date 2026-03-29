@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "notifications.message_delivered",
+  "description": "Emitted when a notification message is confirmed as delivered by the sending provider",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "notifications.message_delivered" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "notification_id": { "type": "string", "format": "uuid" },
+        "user_id": { "type": "string", "format": "uuid" },
+        "channel": { "type": "string", "enum": ["email", "push", "in_app"] },
+        "delivered_at": { "type": "string", "format": "date-time" },
+        "provider_ref": { "type": "string", "description": "Provider-assigned delivery reference ID" }
+      },
+      "required": ["notification_id", "user_id", "channel", "delivered_at", "provider_ref"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

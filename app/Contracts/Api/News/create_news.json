@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "CreateNews",
+  "description": "Contract for POST /api/v1/news — create a new news article in draft status",
+  "request": {
+    "type": "object",
+    "properties": {
+      "author_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+      "body": { "type": "string", "minLength": 1 },
+      "category": { "type": "string", "maxLength": 100 },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string", "maxLength": 50 },
+        "maxItems": 10
+      }
+    },
+    "required": ["author_id", "title", "body"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "news_id": { "type": "string", "format": "uuid" },
+      "status": { "type": "string", "const": "draft" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["news_id", "status", "created_at"],
+    "additionalProperties": false
+  }
+}

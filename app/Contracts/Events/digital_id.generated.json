@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "digital_id.generated",
+  "description": "Emitted when a digital identity artifact is successfully generated for a user",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "digital_id.generated" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "digital_id": { "type": "string", "format": "uuid" },
+        "user_id": { "type": "string", "format": "uuid" },
+        "artifact_path": { "type": "string" },
+        "checksum": { "type": "string", "description": "SHA-256 hex checksum" },
+        "generated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["digital_id", "user_id", "artifact_path", "checksum", "generated_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

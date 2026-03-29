@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "forum.reply_added",
+  "description": "Emitted when a reply is added to a forum topic",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "forum.reply_added" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "reply_id": { "type": "string", "format": "uuid" },
+        "topic_id": { "type": "string", "format": "uuid" },
+        "author_id": { "type": "string", "format": "uuid" }
+      },
+      "required": ["reply_id", "topic_id", "author_id"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

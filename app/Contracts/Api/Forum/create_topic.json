@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "CreateTopic",
+  "description": "Contract for POST /api/v1/forum/topics — create a new forum topic",
+  "request": {
+    "type": "object",
+    "properties": {
+      "author_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+      "body": { "type": "string", "minLength": 1 },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string", "maxLength": 50 },
+        "maxItems": 10
+      }
+    },
+    "required": ["author_id", "title", "body"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "topic_id": { "type": "string", "format": "uuid" },
+      "title": { "type": "string" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["topic_id", "title", "created_at"],
+    "additionalProperties": false
+  }
+}

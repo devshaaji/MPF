@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "admin.moderation_case_resolved",
+  "description": "Emitted when an admin or moderator resolves an open moderation case",
+  "type": "object",
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "event_name": { "type": "string", "const": "admin.moderation_case_resolved" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "case_id": { "type": "string", "format": "uuid" },
+        "resolver_id": { "type": "string", "format": "uuid" },
+        "resolution": { "type": "string", "enum": ["approved", "rejected", "escalated"] },
+        "target_type": { "type": "string", "description": "Entity type under review, e.g. forum_topic, news_article" },
+        "target_id": { "type": "string", "format": "uuid" },
+        "resolved_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["case_id", "resolver_id", "resolution", "target_type", "target_id", "resolved_at"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["event_id", "event_name", "occurred_at", "actor_id", "correlation_id", "causation_id", "payload"]
+}

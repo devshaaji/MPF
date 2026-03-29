@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "AddNewsComment",
+  "description": "Contract for POST /api/v1/news/{id}/comments — add a comment to a news article",
+  "request": {
+    "type": "object",
+    "properties": {
+      "commenter_id": { "type": "string", "format": "uuid" },
+      "body": { "type": "string", "minLength": 1, "maxLength": 5000 }
+    },
+    "required": ["commenter_id", "body"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "comment_id": { "type": "string", "format": "uuid" },
+      "news_id": { "type": "string", "format": "uuid" },
+      "created_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["comment_id", "news_id", "created_at"],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "ResolveModerationCase",
+  "description": "Contract for POST /api/v1/admin/moderation/{id}/resolve — resolve an open moderation case. Required role: admin or moderator",
+  "request": {
+    "type": "object",
+    "properties": {
+      "resolver_id": { "type": "string", "format": "uuid" },
+      "resolution": { "type": "string", "enum": ["approved", "rejected", "escalated"] },
+      "notes": { "type": "string", "maxLength": 2000 }
+    },
+    "required": ["resolver_id", "resolution"],
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "case_id": { "type": "string", "format": "uuid" },
+      "resolution": { "type": "string", "enum": ["approved", "rejected", "escalated"] },
+      "resolved_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["case_id", "resolution", "resolved_at"],
+    "additionalProperties": false
+  }
+}

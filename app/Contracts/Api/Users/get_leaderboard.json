@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "GetLeaderboard",
+  "description": "Contract for GET /api/v1/leaderboard — retrieve the top users ranked by total points",
+  "request": {
+    "type": "object",
+    "description": "No request body. Optional query parameter: limit (int, default 50).",
+    "properties": {
+      "limit": { "type": "integer", "minimum": 1, "maximum": 200, "default": 50 }
+    },
+    "additionalProperties": false
+  },
+  "response": {
+    "type": "object",
+    "properties": {
+      "entries": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "rank": { "type": "integer", "minimum": 1 },
+            "user_id": { "type": "string", "format": "uuid" },
+            "display_name": { "type": "string" },
+            "total_points": { "type": "integer", "minimum": 0 }
+          },
+          "required": ["rank", "user_id", "display_name", "total_points"],
+          "additionalProperties": false
+        }
+      },
+      "generated_at": { "type": "string", "format": "date-time" }
+    },
+    "required": ["entries", "generated_at"],
+    "additionalProperties": false
+  }
+}
