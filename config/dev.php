@@ -25,8 +25,8 @@ return [
         'host'     => '127.0.0.1',
         'port'     => 3306,
         'name'     => 'mpf_dev',
-        'username' => 'mpf',
-        'password' => 'secret',
+        'username' => '',   // Override via APP__DB__USERNAME env var (e.g. export APP__DB__USERNAME=mpf)
+        'password' => '',   // Override via APP__DB__PASSWORD env var (e.g. export APP__DB__PASSWORD=secret)
     ],
 
     'cache' => [

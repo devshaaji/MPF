@@ -38,11 +38,20 @@ final class QueueDispatcher implements QueueDispatcherInterface
      *   status: string,
      *   dlq_reason: string,
      * }>
+     *
+     * Only pending/processing/retry/DLQ jobs are retained.
+     * Completed (STATUS_DONE) jobs are removed immediately after processing
+     * to prevent unbounded memory growth in long-running workers.
      */
     private array $jobs = [];
 
     /**
      * Set of idempotency keys already dispatched (deduplication).
+     *
+     * NOTE: In this in-memory implementation $seen grows for the lifetime of
+     * the process. For a long-running worker handling millions of jobs, use a
+     * broker-backed adapter (Redis SET with TTL, SQS MessageDeduplicationId,
+     * etc.) which provides a bounded, TTL-expiring deduplication window.
      * @var array<string, true>
      */
     private array $seen = [];
@@ -137,7 +146,7 @@ final class QueueDispatcher implements QueueDispatcherInterface
     // Introspection (test / debug helpers)
     // ------------------------------------------------------------------
 
-    /** @return array<string, mixed>|null */
+    /** @return array<string, mixed>|null Returns null for unknown or successfully-completed jobs. */
     public function getJob(string $jobId): ?array
     {
         return $this->jobs[$jobId] ?? null;
@@ -157,27 +166,36 @@ final class QueueDispatcher implements QueueDispatcherInterface
 
     private function process(string $jobId): void
     {
-        $job     = &$this->jobs[$jobId];
-        $handler = $this->handlers[$job['topic']] ?? null;
+        $handler = $this->handlers[$this->jobs[$jobId]['topic']] ?? null;
 
         if ($handler === null) {
             return; // No handler registered yet; job stays pending.
         }
 
-        $job['status'] = self::STATUS_PROCESSING;
-        $job['attempts']++;
+        // Iterative retry loop — avoids recursive call-stack growth and makes
+        // the retry count explicit without relying on PHP stack depth.
+        while (isset($this->jobs[$jobId])) {
+            $job = &$this->jobs[$jobId];
+            $job['status'] = self::STATUS_PROCESSING;
+            $job['attempts']++;
 
-        try {
-            $handler($job['payload']);
-            $job['status'] = self::STATUS_DONE;
-        } catch (\Throwable) {
-            if ($this->retryPolicy->shouldRetry($job['attempts'])) {
-                // Back-off is informational in this in-memory impl; a broker
-                // adapter would schedule re-delivery after backoffSeconds().
-                $job['status'] = self::STATUS_PENDING;
-                $this->process($jobId); // Immediate re-attempt in sync mode.
-            } else {
-                $this->toDlq($jobId, sprintf('Exceeded max retries (%d).', $this->retryPolicy->getMaxRetries()));
+            try {
+                $handler($job['payload']);
+                // Success: remove the job to free memory; idempotency key
+                // remains in $this->seen to prevent re-dispatch.
+                unset($this->jobs[$jobId]);
+                return;
+            } catch (\Throwable) {
+                if ($this->retryPolicy->shouldRetry($job['attempts'])) {
+                    // Back-off is informational in this in-memory impl; a
+                    // broker adapter would schedule re-delivery after
+                    // backoffSeconds().
+                    $job['status'] = self::STATUS_PENDING;
+                    // Continue loop for next attempt.
+                } else {
+                    $this->toDlq($jobId, sprintf('Exceeded max retries (%d).', $this->retryPolicy->getMaxRetries()));
+                    return;
+                }
             }
         }
     }

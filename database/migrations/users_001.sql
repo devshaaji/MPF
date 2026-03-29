@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS users (
     id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     email         VARCHAR(320) NOT NULL UNIQUE,
-    "status        VARCHAR(20)  NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'deactivated')),
+    status         VARCHAR(20)  NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'deactivated')),
     -- active: normal account; suspended: admin-imposed block; deactivated: user-initiated or system deactivation (maps to users.user_deactivated event)
     provider      VARCHAR(50)  NOT NULL,
     provider_subject VARCHAR(255) NOT NULL,

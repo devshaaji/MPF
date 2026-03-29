@@ -103,6 +103,14 @@ final class StructuredLogger implements LoggerInterface
             return;
         }
 
+        // Guard: writer may be null when the logger is constructed directly
+        // without a factory (e.g., auto-wired from the DI container using
+        // default constructor values).  Drop the record silently rather than
+        // throwing a fatal TypeError.
+        if ($this->writer === null) {
+            return;
+        }
+
         $envelope = [
             'timestamp'      => (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339_EXTENDED),
             'level'          => $level,

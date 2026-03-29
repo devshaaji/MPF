@@ -59,14 +59,18 @@ final class WorkerRuntime
         $container->instance(ConfigInterface::class, $config);
         $container->instance(ContainerInterface::class, $container);
 
-        // TODO INFRA-LOG-001: wire LoggerInterface singleton for worker processes.
-        // $loggerFactory = new LoggerFactory(defaultChannel: 'queue', minLevel: $config->get('log.level') ?? 'debug');
-        // $container->singleton(LoggerInterface::class, fn () => $loggerFactory->makeDefault());
-        // Workers should then resolve:
-        //   $container->get(LoggerInterface::class)
-        //       ->withCorrelationId($this->correlationId)
-        //       ->withActorId('worker')
-        //       ->info('Job consumed', ['job_id' => $jobId]);
+        // Wire structured logger singleton for worker processes (INFRA-LOG-001).
+        // Workers use the 'queue' channel so log records can be filtered by
+        // component in aggregation tools.
+        $loggerFactory = new LoggerFactory(
+            defaultChannel: 'queue',
+            minLevel: (string) ($config->get('log.level') ?? 'debug'),
+        );
+        $correlationId = $this->correlationId;
+        $container->singleton(
+            LoggerInterface::class,
+            static fn () => $loggerFactory->makeDefault()->withCorrelationId($correlationId),
+        );
 
         $this->container = $container;
         $this->config    = $config;
