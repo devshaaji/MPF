@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS form_submissions (
     answers      JSONB     NOT NULL,
     submitted_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+-- NOTE: ON DELETE RESTRICT is intentional — submissions are legal/audit records.
+-- A form cannot be deleted while submissions exist; archive the form instead.
 
 CREATE INDEX IF NOT EXISTS idx_form_fields_form_id ON form_fields(form_id);
 CREATE INDEX IF NOT EXISTS idx_form_submissions_form_id ON form_submissions(form_id);

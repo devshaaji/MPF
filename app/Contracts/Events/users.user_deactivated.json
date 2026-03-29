@@ -15,7 +15,7 @@
       "properties": {
         "user_id": { "type": "string", "format": "uuid" },
         "reason": { "type": "string" },
-        "deactivated_by": { "type": "string", "format": "uuid", "description": "actor_id of the admin or system that triggered deactivation" }
+        "deactivated_by": { "type": "string", "format": "uuid", "description": "actor_id of the admin or system that triggered deactivation. Use a reserved system UUID (00000000-0000-0000-0000-000000000001) for automated/system-triggered deactivations." }
       },
       "required": ["user_id", "reason", "deactivated_by"],
       "additionalProperties": false
